@@ -1,5 +1,6 @@
 "use strict";
 
+
 /******************************************************************************
  * Handling navbar clicks and updating navbar
  */
@@ -36,3 +37,10 @@ function updateNavOnLogin() {
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+/** makes the story form appear */
+function navSubmitClick(evt) {
+  $newStory.show();
+}
+
+$navSubmit.on('click', navSubmitClick)
