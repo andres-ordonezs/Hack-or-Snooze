@@ -93,11 +93,10 @@ class StoryList {
     const storyData = await response.json();
 
     console.log(storyData);
-    //TODO: PASS A single object as argument
+
     const newStoryInstance = new Story(storyData.story);
     console.log('newStoryInstance: ', newStoryInstance);
 
-    //TODO: Add new story to -> this.stories.push(story)
     this.stories.push(newStoryInstance);
     return newStoryInstance;
   }
@@ -255,6 +254,10 @@ class User {
     });
 
     const storyData = await response.json();
+
+    const storyIdIndex = this.favorites.indexOf(story.storyId);
+    this.favorites.splice(storyIdIndex,1);
+
   }
 }
 
