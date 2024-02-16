@@ -115,8 +115,9 @@ class User {
 
   constructor(
     { username, name, createdAt, favorites = [], ownStories = [] },
-    token
-  ) {
+    token)
+
+    {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
@@ -127,7 +128,7 @@ class User {
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
-  }
+    }
 
   /** Register new user in API, make User instance & return it.
    *
@@ -219,5 +220,39 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+
+    /** letting the user favorite a story */
+  async function saveFavoriteStory(story) {
+    console.log("this.user: ", this.user)
+    console.log("currentUser: ", currentUser)
+    const response = await fetch(`${BASE_URL}/users/${this.username}/favorites/${story.storyID}`, {
+      method: "POST",
+      body: JSON.stringify(
+        { token: this.loginToken }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+
+    const storyData = response.json();
+
+    this.favorites.push(/** whatever thhe favorite is */)
+
+
+  }
+
+  /** letting the user un-favorite a story */
+  async function removeFavoriteStory(story) {
+    const response = await fetch(`${BASE_URL}/users/${this.username}/favorites/${story.storyID}`, {
+      method: "POST",
+      body: JSON.stringify(
+        { token: this.loginToken }),
+      headers: {
+        "content-type": "application/json",
+        },
+      });
+    }
   }
 }
+
+
