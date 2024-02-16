@@ -56,3 +56,4 @@ console.warn("HEY STUDENT: This program sends many debug messages to" +
   " seeing those helpful debug messages. In your browser console, click on" +
   " menu 'Default Levels' and add Verbose");
 $(start);
+

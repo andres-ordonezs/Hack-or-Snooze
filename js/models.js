@@ -255,10 +255,19 @@ class User {
 
     const storyData = await response.json();
 
-    const storyIdIndex = this.favorites.indexOf(story.storyId);
-    this.favorites.splice(storyIdIndex,1);
+    let storyIdIndex = 0;
+    console.log("favorites; ", this.favorites);
+
+    for (let i = 0; i < this.favorites.length; i++) {
+      if (this.favorites[i].storyId === story.storyId) {
+        storyIdIndex = i;
+      }
+    }
+
+    this.favorites.splice(storyIdIndex, 1);
 
   }
 }
+
 
 
