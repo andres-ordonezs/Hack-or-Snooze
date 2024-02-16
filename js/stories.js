@@ -12,6 +12,19 @@ async function getAndShowStoriesOnStart() {
   putStoriesOnPage();
 }
 
+/* Input: story
+Returns: The HTML for the favorite button (icon)
+
+This function checks if the story is a favorite story and returns the corresponding icon
+button */
+function generateButton(story) {
+  if (currentUser.favorites.indexOf(story.storyId) === -1) {
+    return `<i id='empty-star' class="bi bi-star"></i>`;
+  } else {
+    return `<i id='filled-star' class="bi bi-star-fill"></i>`;
+  }
+}
+
 /**
  * A render method to render HTML for an individual Story instance
  * - story: an instance of Story
@@ -27,7 +40,7 @@ function generateStoryMarkup(story) {
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
-        <i class="bi bi-star"></i>
+        ${generateButton(story)}
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
@@ -78,5 +91,27 @@ async function getNewStory(evt) {
   $newStory.hide();
 }
 
+function addFavoriteHandler(evt) {
+  let selectedStory;
+  let storyId = evt.target.closest('li').id;
+
+  console.log('storyList: ', storyList);
+
+  for (let story of storyList.stories) {
+    if (story.storyId === storyId) {
+      selectedStory = story;
+    }
+  }
+
+  console.log('selectedStory: ', selectedStory);
+  currentUser.addFavorite(selectedStory);
+  console.log(currentUser.favorites);
+}
+
+
 /* EventListener for the form's submit button */
 $newStory.on("submit", getNewStory);
+
+
+/* event Listener for favorites (star) button */
+$allStoriesList.on('click', $emptyStar, addFavoriteHandler);
