@@ -16,6 +16,7 @@ const $navLogOut = $("#nav-logout");
 
 const $newStory = $('#new-story');
 const $navSubmit = $("#nav-submit");
+const $navFavorites = $('#nav-favorites');
 
 const $emptyStar = $('#empty-star');
 const $filledStar = $('#filled-star');

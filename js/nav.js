@@ -9,6 +9,7 @@
 
 function navAllStories(evt) {
   console.debug("navAllStories", evt);
+  $newStory.hide();
   evt.preventDefault();
   hidePageComponents();
   putStoriesOnPage();
@@ -40,8 +41,6 @@ function updateNavOnLogin() {
 
 /** makes the story form appear */
 function navSubmitClick(evt) {
-
-
   $newStory.show();
 }
 

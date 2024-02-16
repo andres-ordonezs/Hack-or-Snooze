@@ -19,18 +19,33 @@ This function checks if the story is a favorite story and returns the correspond
 button */
 
 function generateButton(story) {
+  /* console.log('favorites: ', currentUser.favorites); */
+  console.log('story: ', story);
 
-  const isFavorite = currentUser.favorites.some((favorite) => {
-    console.log("favorite.storyId; ", favorite.storyId);
-    console.log("story.storyId: ", story.storyId);
-    return favorite.storyId === story.storyId;
-  });
+  let isFavorite = false;
+  for (let fav of currentUser.favorites) {
+    if (fav.storyId === story.storyId) {
+      isFavorite = true;
+    }
+  }
 
   if (isFavorite) {
-    return `<i id='empty-star' class="bi bi-star"></i>`;
-  } else {
     return `<i id='filled-star' class="bi bi-star-fill"></i>`;
+  } else {
+    return `<i id='empty-star' class="bi bi-star"></i>`;;
   }
+
+  /*  const isFavorite = currentUser.favorites.some((favorite) => {
+    console.log("favorite.storyId; ", favorite.storyId);
+    console.log("story.storyId: ", story.storyId);
+     return favorite.storyId === story.storyId;
+  });  */
+
+  /*  if (isFavorite) {
+     return `<i id='empty-star' class="bi bi-star"></i>`;
+   } else {
+     return `<i id='filled-star' class="bi bi-star-fill"></i>`;
+   } */
 }
 
 /**
@@ -41,7 +56,7 @@ function generateButton(story) {
  */
 
 function generateStoryMarkup(story) {
-
+  /* console.log('genMarkUp story: ', story); */
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
@@ -106,11 +121,11 @@ function clickFavoriteHandler(evt) {
   if ($closest.hasClass("bi-star")) {
     $closest.removeClass("bi-star").addClass('bi-star-fill');
     addFavoriteStory(evt);
-    console.log("current fav: ", currentUser.favorites);
+    /* console.log("current fav: ", currentUser.favorites); */
   } else {
     $closest.removeClass("bi-star-fill").addClass('bi-star');
     removeFavoriteStory(evt);
-    console.log("removed fav: ", currentUser.favorites);
+    /* console.log("removed fav: ", currentUser.favorites); */
   }
 
 }
@@ -119,6 +134,8 @@ function addFavoriteStory(evt) {
   let selectedStory;
   let storyId = evt.target.closest('li').id;
 
+  /* console.log('storyList: ', storyList); */
+
   for (let story of storyList.stories) {
     if (story.storyId === storyId) {
       selectedStory = story;
@@ -126,6 +143,7 @@ function addFavoriteStory(evt) {
   }
 
   currentUser.addFavorite(selectedStory);
+  console.log('currentUser: ', currentUser.favorites);
 }
 
 function removeFavoriteStory(evt) {
@@ -141,10 +159,35 @@ function removeFavoriteStory(evt) {
   currentUser.removeFavorite(selectedStory);
 }
 
+function displayFavorites() {
+  $newStory.hide();
+  $allStoriesList.empty();
+
+  currentUser.favorites.map(favStory => {
+    console.log('displayFavs favorites: ', currentUser.favorites);
+    console.log('displayFavs story: ', favStory instanceof Story);
+    const $storyMarkup = generateStoryMarkup(favStory);
+
+    $allStoriesList.append($storyMarkup);
+  });
+
+
+  /*   for (let favoriteStory of currentUser.favorites) {
+      console.log('displayFavs favorites: ', currentUser.favorites);
+      console.log('displayFavs story: ', favoriteStory instanceof Story);
+      const $storyMarkup = generateStoryMarkup(favoriteStory);
+
+      $allStoriesList.append($storyMarkup);
+    } */
+
+}
+
 
 /* EventListener for the form's submit button */
 $newStory.on("submit", getNewStory);
 
-
 /* event Listener for favorites (star) button */
 $allStoriesList.on('click', $emptyStar, clickFavoriteHandler);
+
+/* event Listener for favorites (star) button */
+$navFavorites.on('click', displayFavorites);
