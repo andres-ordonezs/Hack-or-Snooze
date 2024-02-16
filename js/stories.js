@@ -20,7 +20,6 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
   return $(`
@@ -44,6 +43,7 @@ function putStoriesOnPage() {
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
+
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
@@ -51,20 +51,31 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-/** called when users submit the form.
- * get the data from the form,
- * call the .addStory method you wrote,
- * and then put that new story on the page.
+/** This function is called when users submit the form.
+ * - gets the data from the form,
+ * TODO> Remove next line
+ * - calls  the .addStory method
+ * - then puts that new story on the page.
 
  */
-
 async function getNewStory(evt) {
+  evt.preventDefault();
+
   const author = $("#author-name").val();
   const title = $("#title").val();
   const url = $("#url").val();
 
-  const dataStory = await addStory()
+  const $dataStory = await storyList.addStory(currentUser, {
+    author,
+    title,
+    url,
+  });
 
+  const $story = generateStoryMarkup($dataStory);
+  $allStoriesList.prepend($story);
+
+  $newStory.hide();
 }
 
-$newStory.on('submit', getNewStory)
+/* EventListener for the form's submit button */
+$newStory.on("submit", getNewStory);

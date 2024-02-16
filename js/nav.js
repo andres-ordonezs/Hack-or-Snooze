@@ -40,7 +40,10 @@ function updateNavOnLogin() {
 
 /** makes the story form appear */
 function navSubmitClick(evt) {
+
+
   $newStory.show();
 }
 
-$navSubmit.on('click', navSubmitClick)
+/* Event Listener for click on 'Submit' navbar button */
+$navSubmit.on('click', navSubmitClick);

@@ -7,7 +7,6 @@ const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
  */
 
 class Story {
-
   /** Make instance of Story from data object about story:
    *   - {title, author, url, username, storyId, createdAt}
    */
@@ -24,11 +23,11 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // FIXME: complete this function!
-    return "hostname.com";
+
+    const newUrl = new URL(this.url);
+    return newUrl.hostname;
   }
 }
-
 
 /******************************************************************************
  * List of Story instances: used by UI to show story lists in DOM.
@@ -60,7 +59,7 @@ class StoryList {
     const storiesData = await response.json();
 
     // turn plain old story objects from API into instances of Story class
-    const stories = storiesData.stories.map(story => new Story(story));
+    const stories = storiesData.stories.map((story) => new Story(story));
 
     // build an instance of our own class using the new array of stories
     return new StoryList(stories);
@@ -74,43 +73,35 @@ class StoryList {
    */
 
   async addStory(user, newStory) {
-    // UNIMPLEMENTED: complete this function!
 
-    const response = await fetch(`${BASE_URL}/stories`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          token: user.loginToken,
-          story: {
-            author: newStory.author,
-            title: newStory.title,
-            url: newStory.url
-          }
-        }),
+    const response = await fetch(`${BASE_URL}/stories`, {
+      method: "POST",
+      body: JSON.stringify({
+        token: user.loginToken,
+        story: {
+          author: newStory.author,
+          title: newStory.title,
+          url: newStory.url,
+        },
+      }),
 
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    const data = await response.json();
+    const storyData = await response.json();
 
-    const newStoryInstance = new Story(
-      {
-        storyId: data.storyId,
-        title: data.title,
-        author: data.author,
-        username: data.username,
-        url: data.url,
-        createdAt: data.createdAt
-      }
-    );
+    console.log(storyData);
+    //TODO: PASS A single object as argument
+    const newStoryInstance = new Story(storyData.story);
+    console.log('newStoryInstance: ', newStoryInstance);
 
+    //TODO: Add new story to -> this.stories.push(story)
+    this.stories.push(newStoryInstance);
     return newStoryInstance;
   }
 }
-
 
 /******************************************************************************
  * User: a user in the system (only used to represent the current user)
@@ -122,21 +113,17 @@ class User {
    *   - token
    */
 
-  constructor({
-    username,
-    name,
-    createdAt,
-    favorites = [],
-    ownStories = []
-  },
-    token) {
+  constructor(
+    { username, name, createdAt, favorites = [], ownStories = [] },
+    token
+  ) {
     this.username = username;
     this.name = name;
     this.createdAt = createdAt;
 
     // instantiate Story instances for the user's favorites and ownStories
-    this.favorites = favorites.map(s => new Story(s));
-    this.ownStories = ownStories.map(s => new Story(s));
+    this.favorites = favorites.map((s) => new Story(s));
+    this.ownStories = ownStories.map((s) => new Story(s));
 
     // store the login token on the user so it's easy to find for API calls.
     this.loginToken = token;
@@ -155,7 +142,7 @@ class User {
       body: JSON.stringify({ user: { username, password, name } }),
       headers: {
         "content-type": "application/json",
-      }
+      },
     });
     const userData = await response.json();
     const { user } = userData;
@@ -166,7 +153,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       userData.token
     );
@@ -184,7 +171,7 @@ class User {
       body: JSON.stringify({ user: { username, password } }),
       headers: {
         "content-type": "application/json",
-      }
+      },
     });
     const userData = await response.json();
     const { user } = userData;
@@ -195,7 +182,7 @@ class User {
         name: user.name,
         createdAt: user.createdAt,
         favorites: user.favorites,
-        ownStories: user.stories
+        ownStories: user.stories,
       },
       userData.token
     );
@@ -212,7 +199,7 @@ class User {
       const response = await fetch(
         `${BASE_URL}/users/${username}?${tokenParams}`,
         {
-          method: "GET"
+          method: "GET",
         }
       );
       const userData = await response.json();
@@ -224,7 +211,7 @@ class User {
           name: user.name,
           createdAt: user.createdAt,
           favorites: user.favorites,
-          ownStories: user.stories
+          ownStories: user.stories,
         },
         token
       );
