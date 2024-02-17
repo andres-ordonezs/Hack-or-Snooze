@@ -23,9 +23,17 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-
     const newUrl = new URL(this.url);
     return newUrl.hostname;
+  }
+
+  /** a static function that returns an instance of Story
+   * when we pass in a storyId
+   * */
+
+  static arbitraryStory(storyId) {
+    const newStory = new Story({ storyId, title: "hello", author: "there", url: "www.google.com", username: "random", createdAt: "time" });
+    return newStory
   }
 }
 
@@ -220,10 +228,8 @@ class User {
   }
 
   /** letting the user favorite a story */
+
   async addFavorite(story) {
-    /*  console.log("this.user: ", this.username);   //////
-     console.log("currentUser: ", currentUser);
-     console.log("story: ", story); */
     const response = await fetch(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, {
       method: "POST",
       body: JSON.stringify(
@@ -235,14 +241,11 @@ class User {
 
     const storyData = await response.json();
 
-    /* console.log('storyData: ', storyData); */   //////
     this.favorites.push(storyData);
-    /* console.log('favorites: ', this.favorites); */   ///////
-
-
   }
 
   /** letting the user un-favorite a story */
+
   async removeFavorite(story) {
     const response = await fetch(`${BASE_URL}/users/${this.username}/favorites/${story.storyId}`, {
       method: "DELETE",

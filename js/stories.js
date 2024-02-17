@@ -19,9 +19,6 @@ This function checks if the story is a favorite story and returns the correspond
 button */
 
 function generateButton(story) {
-  /* console.log('favorites: ', currentUser.favorites); */
-  console.log('story: ', story);
-
   let isFavorite = false;
   for (let fav of currentUser.favorites) {
     if (fav.storyId === story.storyId) {
@@ -32,20 +29,9 @@ function generateButton(story) {
   if (isFavorite) {
     return `<i id='filled-star' class="bi bi-star-fill"></i>`;
   } else {
-    return `<i id='empty-star' class="bi bi-star"></i>`;;
+    return `<i id='empty-star' class="bi bi-star"></i>`;
   }
 
-  /*  const isFavorite = currentUser.favorites.some((favorite) => {
-    console.log("favorite.storyId; ", favorite.storyId);
-    console.log("story.storyId: ", story.storyId);
-     return favorite.storyId === story.storyId;
-  });  */
-
-  /*  if (isFavorite) {
-     return `<i id='empty-star' class="bi bi-star"></i>`;
-   } else {
-     return `<i id='filled-star' class="bi bi-star-fill"></i>`;
-   } */
 }
 
 /**
@@ -56,7 +42,6 @@ function generateButton(story) {
  */
 
 function generateStoryMarkup(story) {
-  /* console.log('genMarkUp story: ', story); */
   const hostName = story.getHostName();
   return $(`
       <li id="${story.storyId}">
@@ -78,7 +63,6 @@ function putStoriesOnPage() {
 
   $allStoriesList.empty();
 
-  // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
 
     const $story = generateStoryMarkup(story);
@@ -86,7 +70,6 @@ function putStoriesOnPage() {
   }
 
   $allStoriesList.show();
-  console.log("favorites arr: ", currentUser.favorites);
 }
 
 /** This function is called when users submit the form.
@@ -115,26 +98,26 @@ async function getNewStory(evt) {
   $newStory.hide();
 }
 
+/** when icon is clicked, toggles between a empty star and a filled star  */
+
 function clickFavoriteHandler(evt) {
   const $closest = $(evt.target).closest('i');
 
   if ($closest.hasClass("bi-star")) {
     $closest.removeClass("bi-star").addClass('bi-star-fill');
     addFavoriteStory(evt);
-    /* console.log("current fav: ", currentUser.favorites); */
   } else {
     $closest.removeClass("bi-star-fill").addClass('bi-star');
     removeFavoriteStory(evt);
-    /* console.log("removed fav: ", currentUser.favorites); */
   }
 
 }
 
+/** adds the Story instance with the favorited story to the list  */
+
 function addFavoriteStory(evt) {
   let selectedStory;
   let storyId = evt.target.closest('li').id;
-
-  /* console.log('storyList: ', storyList); */
 
   for (let story of storyList.stories) {
     if (story.storyId === storyId) {
@@ -146,6 +129,8 @@ function addFavoriteStory(evt) {
   console.log('currentUser: ', currentUser.favorites);
 }
 
+/** removes the Story instance with the un-favorited story from the list  */
+
 function removeFavoriteStory(evt) {
   let selectedStory;
   let storyId = evt.target.closest('li').id;
@@ -153,32 +138,24 @@ function removeFavoriteStory(evt) {
   for (let story of storyList.stories) {
     if (story.storyId === storyId) {
       selectedStory = story;
+    } else {
+      selectedStory = Story.arbitraryStory(storyId);
     }
   }
 
   currentUser.removeFavorite(selectedStory);
 }
 
+/** displays user's favorites in the favorites section */
+
 function displayFavorites() {
   $newStory.hide();
   $allStoriesList.empty();
 
   currentUser.favorites.map(favStory => {
-    console.log('displayFavs favorites: ', currentUser.favorites);
-    console.log('displayFavs story: ', favStory instanceof Story);
     const $storyMarkup = generateStoryMarkup(favStory);
-
     $allStoriesList.append($storyMarkup);
   });
-
-
-  /*   for (let favoriteStory of currentUser.favorites) {
-      console.log('displayFavs favorites: ', currentUser.favorites);
-      console.log('displayFavs story: ', favoriteStory instanceof Story);
-      const $storyMarkup = generateStoryMarkup(favoriteStory);
-
-      $allStoriesList.append($storyMarkup);
-    } */
 
 }
 

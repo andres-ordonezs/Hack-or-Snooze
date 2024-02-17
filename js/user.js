@@ -94,7 +94,6 @@ function saveUserCredentialsInLocalStorage() {
   if (currentUser) {
     localStorage.setItem("token", currentUser.loginToken);
     localStorage.setItem("username", currentUser.username);
-    //localStorage.setItem("favorites", currentUser.favorites);
   }
 }
 
